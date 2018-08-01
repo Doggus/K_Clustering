@@ -65,7 +65,10 @@ int main()
     centroids.push_back(data[3]);
     centroids.push_back(data[6]);
 
-    for (int k = 0; k < 5; ++k)
+    bool stop = false;
+    int ind = 0;
+
+    while(stop==false)
     {
         for (int i = 0; i < data.size() ; ++i)
         {
@@ -96,7 +99,7 @@ int main()
 
         ofstream out ("Results", ios_base::app);
 
-        out << "Iteration " << k << endl;
+        out << "Iteration " << ind << endl;
         out << "Cluster1" <<  endl;
         for (int j = 0; j < cluster1.size(); ++j)
         {
@@ -127,7 +130,14 @@ int main()
         out << "" << endl;
         out << "(" << centroid(cluster3).first << ", " << centroid(cluster3).second << ")" << endl;
         out << "" << endl;
-        
+
+        if(centroids[0].first == centroid(cluster1).first && centroids[0].second == centroid(cluster1).second &&
+           centroids[1].first == centroid(cluster2).first && centroids[1].second == centroid(cluster2).second &&
+           centroids[2].first == centroid(cluster3).first && centroids[2].second == centroid(cluster3).second)
+        {
+            stop = true;
+            break;
+        }
 
         //new centroids
         centroids.clear();
@@ -140,46 +150,11 @@ int main()
         cluster2.clear();
         cluster3.clear();
 
+        ind++;
+
     }
 
 
-
-
-
-
-//    for (int k = 0; k < 6; ++k)
-//    {
-//        for (int i = 0; i < data.size() ; ++i)
-//        {
-//            if(distance(data[0].first,data[0].second,data[i].first,data[i].second) <
-//               distance(data[3].first,data[3].second,data[i].first,data[i].second) &&
-//               distance(data[0].first,data[0].second,data[i].first,data[i].second) <
-//               distance(data[6].first,data[6].second,data[i].first,data[i].second))
-//            {
-//                cluster1.push_back(data[i]);
-//            }
-//            else if(distance(data[3].first,data[3].second,data[i].first,data[i].second) <
-//                    distance(data[0].first,data[0].second,data[i].first,data[i].second) &&
-//                    distance(data[3].first,data[3].second,data[i].first,data[i].second) <
-//                    distance(data[6].first,data[6].second,data[i].first,data[i].second))
-//            {
-//                cluster2.push_back(data[i]);
-//            }
-//            else if(distance(data[6].first,data[6].second,data[i].first,data[i].second) <
-//                    distance(data[0].first,data[0].second,data[i].first,data[i].second) &&
-//                    distance(data[6].first,data[6].second,data[i].first,data[i].second) <
-//                    distance(data[3].first,data[3].second,data[i].first,data[i].second))
-//            {
-//                cluster3.push_back(data[i]);
-//            }
-//        }
-//    }
-
-
-
-
-
-    
 
     return 0;
 }
