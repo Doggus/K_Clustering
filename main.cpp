@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <ostream>
+#include <fstream>
 
 using namespace std;
 
@@ -34,14 +36,14 @@ int index(pair<double, double> p, vector<pair<double,double>> data)
     {
         if(p == data[i])
         {
-            return i;
+            return i+1;
         }
     }
 }
 
 int main()
 {
-    cout << "Hello, World!" << endl;
+    //cout << "Hello, World!" << endl;
 
     vector<pair<double,double>> data;
     data.push_back(make_pair(2,10)); // 0+1 = 1
@@ -58,33 +60,123 @@ int main()
     vector<pair<double,double>> cluster2;
     vector<pair<double,double>> cluster3;
 
-    for (int i = 0; i < data.size() ; ++i)
+    vector<pair<double,double>> centroids;
+    centroids.push_back(data[0]);
+    centroids.push_back(data[3]);
+    centroids.push_back(data[6]);
+
+    for (int k = 0; k < 5; ++k)
     {
-        if(distance(data[0].first,data[i].first,data[0].second,data[i].second) <
-           distance(data[3].first,data[i].first,data[3].second,data[i].second) &&
-                distance(data[0].first,data[i].first,data[0].second,data[i].second) <
-                        distance(data[6].first,data[i].first,data[6].second,data[i].second))
+        for (int i = 0; i < data.size() ; ++i)
         {
-            cluster1.push_back(data[i]);
+
+            if(distance(centroids[0].first,centroids[0].second,data[i].first,data[i].second) <
+               distance(centroids[1].first,centroids[1].second,data[i].first,data[i].second) &&
+               distance(centroids[0].first,centroids[0].second,data[i].first,data[i].second) <
+               distance(centroids[2].first,centroids[2].second,data[i].first,data[i].second))
+            {
+                cluster1.push_back(data[i]);
+            }
+            else if(distance(centroids[1].first,centroids[1].second,data[i].first,data[i].second) <
+                    distance(centroids[0].first,centroids[0].second,data[i].first,data[i].second) &&
+                    distance(centroids[1].first,centroids[1].second,data[i].first,data[i].second) <
+                    distance(centroids[2].first,centroids[2].second,data[i].first,data[i].second))
+            {
+                cluster2.push_back(data[i]);
+            }
+            else if(distance(centroids[2].first,centroids[2].second,data[i].first,data[i].second) <
+                    distance(centroids[0].first,centroids[0].second,data[i].first,data[i].second) &&
+                    distance(centroids[2].first,centroids[2].second,data[i].first,data[i].second) <
+                    distance(centroids[1].first,centroids[1].second,data[i].first,data[i].second))
+            {
+                cluster3.push_back(data[i]);
+            }
         }
-        else if(distance(data[3].first,data[i].first,data[3].second,data[i].second) <
-                distance(data[0].first,data[i].first,data[0].second,data[i].second) &&
-                distance(data[3].first,data[i].first,data[3].second,data[i].second) <
-                distance(data[6].first,data[i].first,data[6].second,data[i].second))
+
+
+        ofstream out ("Results", ios_base::app);
+
+        out << "Iteration " << k << endl;
+        out << "Cluster1" <<  endl;
+        for (int j = 0; j < cluster1.size(); ++j)
         {
-            cluster2.push_back(data[i]);
+            out << index(cluster1[j],data) << " ";
+
         }
-        else
+
+        out << "" << endl;
+        out << "(" << centroid(cluster1).first << ", " << centroid(cluster1).second << ")" << endl;
+
+
+        out << "Cluster2" <<  endl;
+        for (int j = 0; j < cluster2.size(); ++j)
         {
-            cluster3.push_back(data[i]);
+            out << index(cluster2[j],data) << " ";
         }
+
+        out << "" << endl;
+        out << "(" << centroid(cluster2).first << ", " << centroid(cluster2).second << ")" << endl;
+
+        out << "Cluster3" <<  endl;
+        for (int j = 0; j < cluster3.size(); ++j)
+        {
+            out << index(cluster3[j],data) << " ";
+
+        }
+
+        out << "" << endl;
+        out << "(" << centroid(cluster3).first << ", " << centroid(cluster3).second << ")" << endl;
+        out << "" << endl;
+        
+
+        //new centroids
+        centroids.clear();
+        centroids.push_back(centroid(cluster1));
+        centroids.push_back(centroid(cluster2));
+        centroids.push_back(centroid(cluster3));
+
+        //clear cluster vectors
+        cluster1.clear();
+        cluster2.clear();
+        cluster3.clear();
+
     }
-//
-//    cout << "Cluster1" <<  endl;
-//    for (int j = 0; j < cluster1.size(); ++j)
+
+
+
+
+
+
+//    for (int k = 0; k < 6; ++k)
 //    {
-//
+//        for (int i = 0; i < data.size() ; ++i)
+//        {
+//            if(distance(data[0].first,data[0].second,data[i].first,data[i].second) <
+//               distance(data[3].first,data[3].second,data[i].first,data[i].second) &&
+//               distance(data[0].first,data[0].second,data[i].first,data[i].second) <
+//               distance(data[6].first,data[6].second,data[i].first,data[i].second))
+//            {
+//                cluster1.push_back(data[i]);
+//            }
+//            else if(distance(data[3].first,data[3].second,data[i].first,data[i].second) <
+//                    distance(data[0].first,data[0].second,data[i].first,data[i].second) &&
+//                    distance(data[3].first,data[3].second,data[i].first,data[i].second) <
+//                    distance(data[6].first,data[6].second,data[i].first,data[i].second))
+//            {
+//                cluster2.push_back(data[i]);
+//            }
+//            else if(distance(data[6].first,data[6].second,data[i].first,data[i].second) <
+//                    distance(data[0].first,data[0].second,data[i].first,data[i].second) &&
+//                    distance(data[6].first,data[6].second,data[i].first,data[i].second) <
+//                    distance(data[3].first,data[3].second,data[i].first,data[i].second))
+//            {
+//                cluster3.push_back(data[i]);
+//            }
+//        }
 //    }
+
+
+
 
 
     
